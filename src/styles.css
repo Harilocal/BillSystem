@@ -10,7 +10,8 @@
   .p-inputtext{
     padding: 0.5rem 0.5rem !important
   }
-  .p-datatable .p-datatable-tbody > tr > td{
+  .p-datatable .p-datatable-tbody > tr > td
+  {
     padding: 0.5rem 0.5rem !important;
     
   }
