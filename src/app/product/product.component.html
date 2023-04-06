@@ -1,0 +1,245 @@
+
+
+
+<div class="displayright">
+    <div class="card flex-child section1">
+      
+        <p-table
+            #dt
+            
+            [value]="ProductDetails"
+            dataKey="id"
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            [loading]="loading"
+            [paginator]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [globalFilterFields]="['ProductID', 'Product', 'Price', 'Quantity']"
+           
+            
+            >
+            <ng-template pTemplate="caption">
+                <div class="flex">
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal(applyFilterGlobal($event), 'contains')" placeholder="Search keyword" />
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header" >
+                <tr>
+                    <th style="width:22%" *ngFor="let col of cols">
+                        {{col.header}}
+                    </th>
+                    <th>
+                        Add
+                    </th>
+                </tr>
+                
+                <tr >
+                    <th *ngFor="let col of cols">
+                        <p-columnFilter type="text" field={{col.field}}></p-columnFilter>
+                    </th>
+                    <th></th>
+                   
+                </tr>
+               
+            </ng-template>
+            <ng-template pTemplate="body" class="lll" let-product let-qcols let-editing="editing" let-ri="rowIndex">
+                <tr [pEditableRow]="product" >
+                    <ng-container >
+                        <ng-container >
+                            <td pEditableColumn  [ngClass]="{'noneditable': !qcols.editable}"   >
+                        
+                                <p-cellEditor (input)="handleInput($event,product)">
+                                    <ng-template pTemplate="input">
+                                        <input  pInputText type="text"  [(ngModel)]="product.ProducID">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{product.ProductID}} 
+                                    </ng-template>
+                                </p-cellEditor>
+                        </td>
+
+                        <td pEditableColumn     >
+                        
+                            <p-cellEditor (input)="handleInput($event,product)">
+                                <ng-template pTemplate="input">
+                                    <input  pInputText type="text" required  [(ngModel)]="product.Product">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{product.Product}} 
+                                </ng-template>
+                            </p-cellEditor>
+                    </td>
+
+                    <td pEditableColumn    >
+                        
+                        <p-cellEditor (input)="handleInput($event,product)">
+                            <ng-template pTemplate="input">
+                                <input  pInputText type="number"  [(ngModel)]="product.Price">
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{product.Price}} 
+                            </ng-template>
+                        </p-cellEditor>
+                </td>
+
+                <td pEditableColumn    >
+                        
+                    <p-cellEditor (input)="handleInput($event,product)">
+                        <ng-template pTemplate="input">
+                            <input  pInputText type="number" [minlength]="qcols.editable ? 3 : null" [maxlength]="qcols.editable ? 20 : null" [(ngModel)]="product.Quantity">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.Quantity}} 
+                        </ng-template>
+                    </p-cellEditor>
+            </td>
+
+
+                            <!-- <td *ngSwitchCase="'ProductID'" pEditableColumn  [ngClass]="{'noneditable': !col.editable}"   >
+                        
+                                <p-cellEditor (input)="handleInput($event,product)">
+                                    <ng-template pTemplate="input">
+                                        <input  pInputText type="text"  [(ngModel)]="product[col.field]">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{product[col.field]}} 
+                                    </ng-template>
+                                </p-cellEditor>
+                        </td>
+                        <td *ngSwitchDefault pEditableColumn  [ngClass]="{'noneditable': !col.editable}"   >
+                        
+                            <p-cellEditor (input)="handleInput($event,product)">
+                                <ng-template pTemplate="input">
+                                    <input  pInputText type="text" [(ngModel)]="product[col.field]">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{product[col.field]}} 
+                                </ng-template>
+                            </p-cellEditor>
+                    </td> -->
+                        </ng-container>
+                    </ng-container>
+                  
+                    
+                    
+                    <td>
+                        <div class="flex align-items-center justify-content-center gap-2">
+                            <button *ngIf="!editing" pButton pRipple type="button" icon="pi pi-plus" (click)="editclick(product)" class="p-button-rounded p-button-text"></button>
+                            <!-- <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(product)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                            <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(product, ri)" class="p-button-rounded p-button-text p-button-danger"></button> -->
+                        </div>
+                    </td>
+                  
+                  
+                   
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">No Products found.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <div class="section2 flex-child">
+    
+        <p-table styleClass="my-table" [scrollable]="true" scrollHeight="300px" [value]="Productbill">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width:22%" *ngFor="let col of qcols">
+                    {{col.header}}
+                </th>
+                <th>
+                    Total Amount
+                </th>
+                <th>
+                    Remove
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-qcols let-rowData let-rowIndex="rowIndex">
+              <tr>
+        
+                <ng-container >
+                    <ng-container >
+                        <!-- <td  [ngClass]="{'noneditable': !qcols.editable}"   >
+                    
+                            <p-cellEditor (input)="handleInput($event,rowData)">
+                                <ng-template pTemplate="input">
+                                    <input  pInputText type="text" [(ngModel)]="rowData.ProducID">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{rowData.ProductID}} 
+                                </ng-template>
+                            </p-cellEditor>
+                    </td> -->
+                    <td >
+                    
+                        <p-cellEditor (input)="handleInput($event,rowData)">
+                            <ng-template pTemplate="input">
+                                <input  pInputText type="text" [(ngModel)]="rowData.Product">
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{rowData.Product}} 
+                            </ng-template>
+                        </p-cellEditor>
+                </td>
+                <td >
+                    
+                    <p-cellEditor (input)="handleInput($event,rowData)">
+                        <ng-template pTemplate="input">
+                            <input  pInputText type="text" [(ngModel)]="rowData.Price">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{rowData.Price}} 
+                        </ng-template>
+                    </p-cellEditor>
+            </td>
+                    <td>
+                    
+                        <button (click)="decrementQuantity(rowData,rowIndex)">-</button>
+                        {{rowData.Quantity}}
+                
+                  <button (click)="incrementQuantity(rowData)">+</button>
+                </td>
+                    <td>
+                        {{rowData.Quantity * rowData.Price | currency: 'INR':'symbol-narrow':'1.2-2'}}
+                    </td>
+                <td>
+                    <button (click)="deleteRow(rowData,rowIndex)">Delete</button>
+                  </td>
+                    </ng-container>
+                </ng-container>
+                
+               
+               
+              </tr>
+            </ng-template>
+            <ng-template let-rowData pTemplate="footer">
+                <tr>
+                  <td colspan="4" style="text-align: right;">
+                   <span>{{calculateOverallTotal() | currency: 'INR':'symbol-narrow':'1.2-2'}}</span>
+                   
+                  </td>
+                  <td>
+                    <button (click)="save()">Save</button>
+                  </td>
+                
+                </tr>
+              </ng-template>
+          </p-table>
+          
+        </div>
+</div>
+
+
+
+
+
+
+
